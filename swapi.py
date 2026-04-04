@@ -24,7 +24,7 @@ class SWRequester(APIRequester):
             categories_data = response.json()
         return list(categories_data.keys())
 
-    def get_sw_info(self, sw_type):
+    def get_sw_info(self, sw_type: str):
         response = self.get(sw_type)
         if response:
             return str(response.text)
@@ -36,9 +36,11 @@ def save_sw_data():
     categories = sw.get_sw_categories()
     os.makedirs('data', exist_ok=True)
     for category in categories:
-        file_path = os.path.join('data', f'{category}.txt')
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(f'{category}\n')
+        data = sw.get_sw_info(category)
+        if data:
+            file_path = os.path.join('data', f'{category}.txt')
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(f'{data}\n')
 
 
 if __name__ == '__main__':
