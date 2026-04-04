@@ -1,7 +1,5 @@
-# swapi.py
 import requests
-# from urllib3.exceptions import InsecureRequestWarning
-# requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+import os
 
 
 class APIRequester:
@@ -29,15 +27,19 @@ class SWRequester(APIRequester):
     def get_sw_info(self, sw_type):
         response = self.get(sw_type)
         if response:
-            return response.text
+            return str(response.text)
         return ''
-    
-    def save_data():
-        pass
 
 
-sw = SWRequester('https://swapi.dev/api/')
-categories = sw.get_sw_categories()
-print(f'Доступные категории: {categories}')
-info = sw.get_sw_info(categories[0])
-print(info)
+def save_sw_data():
+    sw = SWRequester('https://swapi.dev/api/')
+    categories = sw.get_sw_categories()
+    os.makedirs('data', exist_ok=True)
+    for category in categories:
+        file_path = os.path.join('data', f'{category}.txt')
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(f'{category}\n')
+
+
+if __name__ == '__main__':
+    save_sw_data()
